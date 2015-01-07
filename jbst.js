@@ -186,6 +186,7 @@
         search: function (key) {
             var root = this.root;
             
+            // 2 base cases
             if (!root) throw new BSTException('Key not found. Empty tree');
             if (root.key === key) return root.val;
             
@@ -195,7 +196,7 @@
                 if (key === node.key) return pack(node.key, node.val);
                 if (key < node.key) _aux(node.left);
                 if (key > node.key) _aux(node.right);
-            })(this.root);
+            })(root);
         },
         
         insert: function () {
