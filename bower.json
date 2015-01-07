@@ -1,0 +1,24 @@
+{
+  "name": "jbst",
+  "main": "jbst.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/oss6/jbst",
+  "authors": [
+    "Ossama Edbali <ossedb@gmail.com>"
+  ],
+  "description": "BST (Binary Search Trees) data structure implementation",
+  "keywords": [
+    "BST",
+    "data",
+    "tree",
+    "trees"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
