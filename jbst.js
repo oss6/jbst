@@ -5,7 +5,7 @@
     function BSTException(message) {
         this.message = message;
     }
-
+    
 // Private variables and functions    
 /*var rec = function (obj, cases) {
     // Unpack of cases
@@ -177,9 +177,19 @@
             // Unpacking arguments
             var args = arguments,
                 alen = args.length,
-                key = alen === 1 ? Object.keys(obj)[0] : args[0],
-                val = alen === 1 ? obj[key] : args[1];
+                k = alen === 1 ? Object.keys(obj)[0] : args[0],
+                v = alen === 1 ? obj[k] : args[1];
             
+            return (function _aux (node) {
+                if (!node) return new Node({k:v}, null, null);
+                
+                var k1 = node.key,
+                    v1 = node.val;
+                
+                if (k === k1)       return new BSTException('');
+                else if (k < k1)    return new Node({k1:v1}, _aux(node.left), node.right);
+                else                return new Node({k1:v1}, node.left, _aux(node.left));
+            })(this.root);
         },
         
         delete: function (key) {
