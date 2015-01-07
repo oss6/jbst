@@ -26,7 +26,7 @@ API & usage
 -----------
 jbst comes with two constructors:
 - `Node` which defines a BST node.
-- `BST` which defines a BST (is just a wrapper for the data structure containing the root)
+- `BST` which defines a binary search tree (is just a wrapper for the data structure containing the root)
 
 ### Node
 To create a node:
