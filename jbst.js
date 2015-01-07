@@ -7,7 +7,7 @@
     }
 
 // Private variables and functions    
-var rec = function (obj, cases) {
+/*var rec = function (obj, cases) {
     // Unpack of cases
     var base_case = cases.base_base,
         rec_case = cases.rec_case;
@@ -16,9 +16,9 @@ var rec = function (obj, cases) {
         // Base case
         if (!node) return base_case;
         // Recursive case
-        return rec_case(node, _aux);
+        return rec_case.call(null, node, _aux);
     })(obj);
-};
+};*/
     
 // Node constructor
     
@@ -68,13 +68,6 @@ var rec = function (obj, cases) {
             var lcount = 0,
                 rcount = 0,
                 count = 0;
-            
-            /*return rec(this.root, {
-                'base_case': 0,
-                'rec_case': function (node, fn) {
-                    return 1 + fn(node.left) + fn(node.right);
-                }
-            });*/
             
             return (function _aux (node) {
                 if (!node) return 0;
