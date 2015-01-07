@@ -19,18 +19,65 @@
         return rec_case.call(null, node, _aux);
     })(obj);
 };*/
+
+// Polyfills
+    
+    // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+    if (!Object.keys) {
+      Object.keys = (function() {
+        'use strict';
+        var hasOwnProperty = Object.prototype.hasOwnProperty,
+            hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+            dontEnums = [
+              'toString',
+              'toLocaleString',
+              'valueOf',
+              'hasOwnProperty',
+              'isPrototypeOf',
+              'propertyIsEnumerable',
+              'constructor'
+            ],
+            dontEnumsLength = dontEnums.length;
+
+        return function(obj) {
+          if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+            throw new TypeError('Object.keys called on non-object');
+          }
+
+          var result = [], prop, i;
+
+          for (prop in obj) {
+            if (hasOwnProperty.call(obj, prop)) {
+              result.push(prop);
+            }
+          }
+
+          if (hasDontEnumBug) {
+            for (i = 0; i < dontEnumsLength; i++) {
+              if (hasOwnProperty.call(obj, dontEnums[i])) {
+                result.push(dontEnums[i]);
+              }
+            }
+          }
+          return result;
+        };
+      }());
+    }
     
 // Node constructor
     
-    function Node(value, left, right) {
+    function Node(obj, left, right) {
         if (!(this instanceof Node)) {
-            return new Node(value, left, right);
+            return new Node(obj, left, right);
         }
         
         if (!(left instanceof Node && right instanceof Node) && (left !== null && right !== null))
             return new BSTException('Error! Not a valid node.');
         
-        this.value = value;
+        // Unpack object
+        this.key = Object.keys(obj)[0];
+        this.val = obj[this.key];
+        
         this.left = left;
         this.right = right;
     }
@@ -38,21 +85,11 @@
     Node.prototype = {
         
         height: function () {
-            var lh = 0, rh = 0;
-            
             return (function _aux (node) {
                 if (!node) return -1;
-                
-                lh = _aux(node.left);
-                rh = _aux(node.right);
-                
-                return 1 + Math.max(lh, rh);
+                return 1 + Math.max(_aux(node.left), _aux(node.right));
             })(this);
         },
-        
-        parent: function () {
-            
-        }
         
     };
     
@@ -65,13 +102,9 @@
     BST.prototype = {
         
         size: function () {
-            var lcount = 0,
-                rcount = 0,
-                count = 0;
-            
             return (function _aux (node) {
-                if (!node) return 0;
-                return 1 + _aux(node.left) + _aux(node.right);
+                if (!node) return 0;                            // Base case
+                return 1 + _aux(node.left) + _aux(node.right);  // Recursive case
             })(this.root);
         },
         
@@ -85,7 +118,7 @@
             (function _aux (node) {
                 if (node) {
                     _aux(node.left);
-                    ret.push(node.value);
+                    ret.push(node.val);
                     _aux(node.right);
                 }
             })(this.root);
@@ -98,7 +131,7 @@
             
             (function _aux (node) {
                 if (node) {
-                    ret.push(node.value);
+                    ret.push(node.val);
                     _aux(node.left);
                     _aux(node.right);
                 }
@@ -114,14 +147,42 @@
                 if (node) {
                     _aux(node.left);
                     _aux(node.right);
-                    ret.push(node.value);
+                    ret.push(node.val);
                 }
             })(this.root);
             
             return ret;
         },
         
-        insert: function (val) {
+        sum: function () {
+            return (function _aux (node) {
+                if (!node) return 0;
+                return node.val + _aux(node.left) + _aux(node.right);
+            })(this.root);
+        },
+        
+        search: function (key) {
+            var root = this.root;
+            
+            if (!root) return new BSTException('Key not found. Empty tree');
+            if (root.key === key) return root.val;
+            
+            return (function _aux (node) {
+                if (!node) return 0;
+                return node.val + _aux(node.left) + _aux(node.right);
+            })(this.root);
+        },
+        
+        insert: function () {
+            // Unpacking arguments
+            var args = arguments,
+                alen = args.length,
+                key = alen === 1 ? Object.keys(obj)[0] : args[0],
+                val = alen === 1 ? obj[key] : args[1];
+            
+        },
+        
+        delete: function (key) {
                
         }
         
