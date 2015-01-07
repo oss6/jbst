@@ -6,7 +6,28 @@
         this.message = message;
     }
     
-// Private variables and functions    
+    function GeneratorException(message) {
+        this.message = message;   
+    }
+    
+// Private variables and functions
+    var
+    pack = function (key, val) {
+        var obj = {};
+        return obj[key] = val, obj;
+    },
+    
+    unpackg = function (obj) {
+        var k = Object.keys(obj)[0],
+            v = obj[k],
+            i = 0;
+        
+        return function () {
+            if (i >= 2) throw new GeneratorException('');
+            var val = !i ? k : v;
+            return i++, val;
+        }
+    };
 /*var rec = function (obj, cases) {
     // Unpack of cases
     var base_case = cases.base_base,
@@ -72,11 +93,12 @@
         }
         
         if (!(left instanceof Node && right instanceof Node) && (left !== null && right !== null))
-            return new BSTException('Error! Not a valid node.');
+            throw new BSTException('Error! Not a valid node.');
         
         // Unpack object
-        this.key = Object.keys(obj)[0];
-        this.val = obj[this.key];
+        var unpack = unpackg(obj);
+        this.key = unpack();
+        this.val = unpack();
         
         this.left = left;
         this.right = right;
@@ -164,31 +186,46 @@
         search: function (key) {
             var root = this.root;
             
-            if (!root) return new BSTException('Key not found. Empty tree');
+            if (!root) throw new BSTException('Key not found. Empty tree');
             if (root.key === key) return root.val;
             
             return (function _aux (node) {
-                if (!node) return 0;
-                return node.val + _aux(node.left) + _aux(node.right);
+                if (!node) return "noooo";
+                    
+                if (key === node.key) return pack(node.key, node.val);
+                if (key < node.key) _aux(node.left);
+                if (key > node.key) _aux(node.right);
             })(this.root);
         },
         
         insert: function () {
             // Unpacking arguments
-            var args = arguments,
-                alen = args.length,
-                k = alen === 1 ? Object.keys(obj)[0] : args[0],
-                v = alen === 1 ? obj[k] : args[1];
+            var args = arguments, alen = args.length, k, v;
             
-            return (function _aux (node) {
-                if (!node) return new Node({k:v}, null, null);
+            if (alen === 1) {
+                var obj = args[0];
+                k = Object.keys(obj)[0];
+                v = obj[k];
+            }
+            else if (alen === 2) {
+                k = args[0];
+                v = args[1];
+            }
+            else throw new BSTException('Wrong number of arguments provided');
+            
+            this.root = (function _aux (node) {
+                if (!node) {
+                    var obj = pack(k, v);
+                    return new Node(obj, null, null);
+                }
                 
                 var k1 = node.key,
-                    v1 = node.val;
+                    v1 = node.val,
+                    obj = pack(k1, v1);
                 
-                if (k === k1)       return new BSTException('');
-                else if (k < k1)    return new Node({k1:v1}, _aux(node.left), node.right);
-                else                return new Node({k1:v1}, node.left, _aux(node.left));
+                if (k === k1)       throw new BSTException('Same key provided');
+                else if (k < k1)    return new Node(obj, _aux(node.left), node.right);
+                else                return new Node(obj, node.left, _aux(node.left));
             })(this.root);
         },
         
