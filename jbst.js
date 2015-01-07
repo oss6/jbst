@@ -7,7 +7,19 @@
     }
 
 // Private variables and functions    
+var rec = function (obj, cases) {
+    // Unpack of cases
+    var base_case = cases.base_base,
+        rec_case = cases.rec_case;
 
+    return (function _aux (node) {
+        // Base case
+        if (!node) return base_case;
+        // Recursive case
+        return rec_case(node, _aux);
+    })(obj);
+};
+    
 // Node constructor
     
     function Node(value, left, right) {
@@ -26,17 +38,20 @@
     Node.prototype = {
         
         height: function () {
-            var lh = 0,
-                rh = 0;
+            var lh = 0, rh = 0;
             
-            return (function _aux (node, depth) {
+            return (function _aux (node) {
                 if (!node) return -1;
                 
-                lh = _aux(node.left, lh);
-                rh = _aux(node.right, rh);
+                lh = _aux(node.left);
+                rh = _aux(node.right);
                 
                 return 1 + Math.max(lh, rh);
             })(this);
+        },
+        
+        parent: function () {
+            
         }
         
     };
@@ -50,7 +65,21 @@
     BST.prototype = {
         
         size: function () {
+            var lcount = 0,
+                rcount = 0,
+                count = 0;
             
+            /*return rec(this.root, {
+                'base_case': 0,
+                'rec_case': function (node, fn) {
+                    return 1 + fn(node.left) + fn(node.right);
+                }
+            });*/
+            
+            return (function _aux (node) {
+                if (!node) return 0;
+                return 1 + _aux(node.left) + _aux(node.right);
+            })(this.root);
         },
         
         height: function () {
