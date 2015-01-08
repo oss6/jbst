@@ -240,7 +240,7 @@
                 
                 if (k === k1)       throw new BSTException('Same key provided');
                 else if (k < k1)    return new Node(obj, _aux(node.left), node.right);
-                else                return new Node(obj, node.left, _aux(node.left));
+                else                return new Node(obj, node.left, _aux(node.right));
             })(this.root);
         },
         
