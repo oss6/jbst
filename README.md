@@ -107,5 +107,4 @@ var tree = j.BST.fromObject({
 #### Methods
 | Method        | Description | Example
 | ------------- |------------- | ------
-| `constructor` |              | See above
 | `height`      | Gets the height of the root node (i.e. height of the tree) | `tree.height() >> 1`
