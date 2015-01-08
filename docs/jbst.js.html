@@ -33,7 +33,7 @@
  */
 
 /**
- * Main namespace for the jbst library.
+ * Main namespace for the jbst library. API's entry point.
  * @namespace j
  */
 ;(function (window, undefined) {
@@ -382,11 +382,24 @@ var
             return this.isBST() &amp;&amp; this.rankConsistent();
         },
         
+        /**
+         * Checks whether the given key is in the tree
+         * @params {string} key - The lookup key
+         * @returns {boolean} True when the key exists, false otherwise
+         * @memberof j.BST
+         * @instance
+         */
         contains: function (key) {
             return this.get(key) !== null;  
         },
         
-        // Check
+        /**
+         * Deletes a node given the key
+         * @params {string} key - The lookup key
+         * @returns {this} The current object (for chaining capabilities)
+         * @memberof j.BST
+         * @instance
+         */
         delete: function (key) {
             if (this.isEmpty()) throw new BSTException('Empty tree');
             /*this.root = del(key, this.root);
@@ -394,6 +407,12 @@ var
             return this;*/
         },
         
+        /**
+         * Deletes the far right node
+         * @returns {this} The current object (for chaining capabilities)
+         * @memberof j.BST
+         * @instance
+         */
         deleteMax: function () {
             if (this.isEmpty()) throw new BSTException('Empty tree');
             this.root = deleteMax(this.root);
@@ -401,6 +420,12 @@ var
             return this;
         },
         
+        /**
+         * Deletes the far left node
+         * @returns {this} The current object (for chaining capabilities)
+         * @memberof j.BST
+         * @instance
+         */
         deleteMin: function () {
             if (this.isEmpty()) throw new BSTException('Empty tree');
             this.root = deleteMin(this.root);
@@ -414,14 +439,34 @@ var
             else return x.key;
         },
         
+        /**
+         * Gets the node's value given the key
+         * @params {string} The lookup key
+         * @returns {mixed} The found value (null if not)
+         * @memberof j.BST
+         * @instance
+         */
         get: function (key) {
             return get(this.root, key);
         },
         
+        /**
+         * Gets the height of the tree (i.e. the height of the root node)
+         * @returns {number} The height of the tree
+         * @memberof j.BST
+         * @instance
+         */
         height: function () {
             return this.root.height();
         },
         
+        /**
+         * Gets an array (linear) representation of the BST visiting the
+         * left subtree first, then the current node and then the right subtree
+         * @returns {Array} The array representation
+         * @memberof j.BST
+         * @instance
+         */
         inOrder: function () {
             var ret = [];
             
@@ -436,28 +481,65 @@ var
             return ret;
         },
         
+        /**
+         * Checks whether the data structure satisfy symmetric order
+         * @returns {boolean} True if the rule is satisfied, false otherwise
+         * @memberof j.BST
+         * @instance
+         */
         isBST: function () {
             return isBST(this.root, null, null);
         },
         
+        /**
+         * Checks whether the tree is empty
+         * @returns {boolean} True if the BST is empty, false otherwise
+         * @memberof j.BST
+         * @instance
+         */
         isEmpty: function () {
             return this.size() === 0;  
         },
         
+        /**
+         * Gets the key of the far right most node
+         * @returns {string} The key
+         * @memberof j.BST
+         * @instance
+         */
         max: function () {
             if (this.isEmpty()) return null;
             return max(this.root).key;
         },
         
+        /**
+         * Gets the key of the far left most node
+         * @returns {string} The key
+         * @memberof j.BST
+         * @instance
+         */
         min: function () {
             if (this.isEmpty()) return null;
             return min(this.root).key;
         },
         
+        /**
+         * Gets the number of nodes in the tree
+         * @returns {number} The number of nodes
+         * @memberof j.BST
+         * @instance
+         */
         size: function () {
             return size(this.root);
         },
         
+        /**
+         * Gets an array (linear) representation of the BST visiting the
+         * left subtree first, then the right subtree and then the current node 
+         * @returns {Array} The array representation
+         * @memberof j.BST
+         * @instance
+         */
         postOrder: function () {
             var ret = [];
             
@@ -472,6 +554,13 @@ var
             return ret;
         },
         
+        /**
+         * Gets an array (linear) representation of the BST visiting the
+         * current node first, then the left and the right subtrees
+         * @returns {Array} The array representation
+         * @memberof j.BST
+         * @instance
+         */
         preOrder: function () {
             var ret = [];
             
@@ -486,6 +575,12 @@ var
             return ret;
         },
         
+        /**
+         * Inserts an node in the tree (maintaining the structure order)
+         * @returns {this} The current object (for chaining capabilities)
+         * @memberof j.BST
+         * @instance
+         */
         put: function () {
             // Unpacking arguments
             var args = arguments, alen = args.length, k, v;
@@ -515,13 +610,23 @@ var
             return this; // For chaining
         },
         
-        // If the given key is equal to the key at the root, we return the number of keys t in the left subtree;
-        // if the given key is less than the key at the root, we return the rank of the key in the left subtree;
-        // and if the given key is larger than the key at the root, we return t plus one (to count the key at the root) plus the rank of the key in the right subtree.
+        /**
+         * Gets the rank of the given key
+         * @params {string} key - The key
+         * @returns {number} The rank of the key
+         * @memberof j.BST
+         * @instance
+         */
         rank: function (k) {
             return rank(k, this.root);
         },
         
+        /**
+         * Checks if the tree is rank consistent
+         * @returns {boolean} True if rank consistency is satisfied, false otherwise
+         * @memberof j.BST
+         * @instance
+         */
         rankConsistent: function () {
             for (var i = 0, size = this.size(); i &lt; size; i++)
                 if (i !== this.rank(this.select(i))) return false;
@@ -542,6 +647,12 @@ var
             return x.key;
         },
         
+        /**
+         * Returns the sum of the nodes value
+         * @returns {number} Sum of nodes value
+         * @memberof j.BST
+         * @instance
+         */
         sum: function () {
             return sum(this.root);
         }
@@ -569,7 +680,7 @@ var
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha13</a> on Thu Jan 08 2015 23:00:20 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha13</a> on Thu Jan 08 2015 23:32:03 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
