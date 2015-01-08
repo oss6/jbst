@@ -121,6 +121,20 @@
         this.root = root;   
     }
     
+    BST.fromJSON = function (jsonStr) {
+          
+    };
+    
+    BST.fromArray = function (arr) {
+        var tree = new BST(null);
+        
+        for (var i = 0, len = arr.length; i < len; i++) {
+            tree.insert(arr[i]);   
+        }
+        
+        return tree;
+    };
+    
     BST.prototype = {
         
         size: function () {
@@ -191,11 +205,11 @@
             if (root.key === key) return root.val;
             
             return (function _aux (node) {
-                if (!node) return "noooo";
+                if (!node) throw new BSTException('Key not found');
                     
-                if (key === node.key) return pack(node.key, node.val);
-                if (key < node.key) _aux(node.left);
-                if (key > node.key) _aux(node.right);
+                if (key === node.key) return node.val;
+                if (key < node.key) return _aux(node.left);
+                if (key > node.key) return _aux(node.right);
             })(root);
         },
         
@@ -229,6 +243,31 @@
                 else                return new Node(obj, node.left, _aux(node.left));
             })(this.root);
         },
+        
+        min: function () {
+            return (function _aux (node) {
+                if (!node.left) return pack(node.key, node.val);
+                return _aux(node.left);
+            })(this.root);
+        },
+        
+        max: function () {
+            return (function _aux (node) {
+                if (!node.right) return pack(node.key, node.val);
+                return _aux(node.right);
+            })(this.root);
+        },
+        
+        /*let rec delete k = function
+          | Empty                -> Empty
+          | Node ((k', v), l, r) ->
+             if k < k'      then delete k Node ((k', v), delete k l, r)
+             else if k > k' then delete k Node ((k', v), l, delete k r)
+             else if l = Empty then r
+             else if r = Empty then l
+             else let (k'', v'') = first_inorder r in
+              Node ((k'', v''), l, delete k'' r)
+        ;;*/
         
         delete: function (key) {
                
