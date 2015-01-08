@@ -320,6 +320,12 @@ var
         return tree;
     };
     
+    /**
+     * Creates a tree from a single-key array
+     * @params {Array} arr - The array to parse
+     * @returns {BST} The tree
+     * @memberof j.BST
+     */
     BST.fromArray = function (arr) {
         var tree = new BST(null);
         
@@ -338,6 +344,12 @@ var
             else return x.key;
         },
         
+        /**
+         * Checks the consistency of the tree
+         * @returns {boolean} Whether the BST is consistent
+         * @memberof j.BST
+         * @instance
+         */
         check: function () {
             return this.isBST() && this.rankConsistent();
         },
