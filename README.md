@@ -39,9 +39,9 @@ jbst comes with two constructors:
 - `BST` which defines a binary search tree (is just a wrapper for the data structure containing the root)
 
 ### Node
-To create a node:
+To create a Node object:
 ```javascript
-var n = new Node({ 'A': 3 }, null, null)
+var n = j.Node('A', 3, null, null); // With or without new
 ```
 In this case the node `n` has the key 'A' and the value 3. It has no children (no left nor right subtrees).
 
@@ -52,8 +52,27 @@ In this case the node `n` has the key 'A' and the value 3. It has no children (n
 | `left`        | Left subtree  |
 | `right`       | Right subtree |
 
-| Method        | Description
-| ------------- |-------------
-| `height`      | Get the height of a node (i.e. the distance from the node to the deepest leaf)
+| Method        | Description | Example
+| ------------- |------------- | ------
+| `constructor` |              | See above
+| `height`      | Gets the height of a node (i.e. the distance from the node to the deepest leaf) | n.height() >> 0
 
 ### BST (work in progress...)
+To create a BST object just pass to the BST constructor the root:
+```javascript
+var tree = new BST(
+    j.Node('A', 3, null,
+        jNode('B', 45, null, null)
+    )
+);
+```
+This example will create a node 'A' with one children in the right subtree which in turn has no children.
+
+| Property      | Description
+| ------------- |-------------
+| `root`        | Holds the entire data structure (defined recursively)
+
+| Method        | Description | Example
+| ------------- |------------- | ------
+| `constructor` |              | See above
+| `height`      | Gets the height of the root node (i.e. height of the tree) | tree.height() >> 1
