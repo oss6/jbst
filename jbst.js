@@ -11,19 +11,19 @@
     }
     
 // Private variables and functions
-    var
+var
     pack = function (key, val) {
         var obj = {};
         return obj[key] = val, obj;
     },
         
     size = function (x) {
-        if (!x) return 0;                         // Base case
+        if (x === null) return 0;                         // Base case
         return 1 + size(x.left) + size(x.right);  // Recursive case
     },
     
     sum = function (x) {
-        if (!x) return 0;
+        if (x === null) return 0;
         return x.val + sum(x.left) + sum(x.right);
     },
     /*private Node max(Node x) { 
@@ -32,17 +32,17 @@
     } */
         
     min = function (x) {
-        if (!x.left) return x;
+        if (x.left === null) return x;
         return min(x.left);
     },
     
     max = function (x) {
-        if (!x.right) return x;
+        if (x.right === null) return x;
         return max(x.right);
     },
         
     get = function (x, k) {
-        if (!x) throw new BSTException('Key not found.'); // or return null
+        if (x === null) throw new BSTException('Key not found.'); // or return null
         
         var k1 = x.key;
         if (k === k1) return x.val;
@@ -51,7 +51,7 @@
     },
         
     rank = function (k, x) {
-        if (x == null) return 0; 
+        if (x === null) return 0; 
         
         var kr = x.key;
         if (k === kr) return size(x.left);
@@ -60,7 +60,7 @@
     },
     
     floor = function (x, k) {
-        if (x == null) return null;
+        if (x === null) return null;
         
         var k1 = x.key;
         if (k === k1) return x;
@@ -80,6 +80,18 @@
             return (t !== null) ? t : x;
         }
         return ceil(x.right, k); 
+    },
+    
+    deleteMin = function (x) {
+        if (x.left === null) return x.right;
+        x.left = deleteMin(x.left);
+        return x;
+    },
+    
+    deleteMax = function (x) {
+        if (x.right === null) return x.left;
+        x.right = deleteMax(x.right);
+        return x;
     };
 
 // Polyfills
@@ -301,10 +313,16 @@
         // For delete the minimum, we go left until finding a node that has a null left link and then replace the link to that node by its right link
         deleteMin: function () {
             if (this.isEmpty()) throw new BSTException('Empty tree');
+            this.root = deleteMin(this.root);
+            // check();
+            return this;
         },
         
         deleteMax: function () {
             if (this.isEmpty()) throw new BSTException('Empty tree');
+            this.root = deleteMax(this.root);
+            // check();
+            return this;
         },
         
         /*let rec delete k = function
