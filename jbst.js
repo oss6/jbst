@@ -1,13 +1,13 @@
+// jbst.js
+// JS implementation of binary-search trees (BST)
+// Ossama Edbali - MIT License 2015
+
 ;(function (window, undefined) {
     
 // Exception constructor
     
     function BSTException(message) {
         this.message = message;
-    }
-    
-    function GeneratorException(message) {
-        this.message = message;   
     }
     
 // Private variables and functions
@@ -19,7 +19,7 @@ var
     },
         
     size = function (x) {
-        if (x === null) return 0;                         // Base case
+        if (x === null) return 0;                 // Base case
         return 1 + size(x.left) + size(x.right);  // Recursive case
     },
     
@@ -39,7 +39,7 @@ var
     },
         
     get = function (x, k) {
-        if (x === null) throw new BSTException('Key not found.'); // or return null
+        if (x === null) return null; // be careful
         
         var k1 = x.key;
         if (k === k1) return x.val;
@@ -122,6 +122,24 @@ var
             
             return Node(k2, v2, l, del(k2, r));
         }
+    },
+    
+    isBST = function (x, min, max) {
+        if (x === null) return true;
+        
+        var k = x.key, l = x.left, r = x.right;
+        if (min !== null && k <= min) return false;
+        if (max !== null && k >= max) return false;
+        return isBST(l, min, k) && isBST(r, k, max);
+    },
+    
+    select = function (x, k) {
+        if (x === null) return null; 
+        
+        var t = size(x.left); 
+        if      (t > k) return select(x.left,  k); 
+        else if (t < k) return select(x.right, k - t - 1); 
+        else            return x; 
     };
 
 // Polyfills
@@ -168,6 +186,65 @@ var
         }());
     }
     
+    // Production steps of ECMA-262, Edition 5, 15.4.4.18
+    // Reference: http://es5.github.io/#x15.4.4.18
+    if (!Array.prototype.forEach) {
+
+      Array.prototype.forEach = function(callback, thisArg) {
+
+        var T, k;
+
+        if (this == null) {
+          throw new TypeError(' this is null or not defined');
+        }
+
+        // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
+        var O = Object(this);
+
+        // 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
+        // 3. Let len be ToUint32(lenValue).
+        var len = O.length >>> 0;
+
+        // 4. If IsCallable(callback) is false, throw a TypeError exception.
+        // See: http://es5.github.com/#x9.11
+        if (typeof callback !== "function") {
+          throw new TypeError(callback + ' is not a function');
+        }
+
+        // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+        if (arguments.length > 1) {
+          T = thisArg;
+        }
+
+        // 6. Let k be 0
+        k = 0;
+
+        // 7. Repeat, while k < len
+        while (k < len) {
+
+          var kValue;
+
+          // a. Let Pk be ToString(k).
+          //   This is implicit for LHS operands of the in operator
+          // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
+          //   This step can be combined with c
+          // c. If kPresent is true, then
+          if (k in O) {
+
+            // i. Let kValue be the result of calling the Get internal method of O with argument Pk.
+            kValue = O[k];
+
+            // ii. Call the Call internal method of callback with T as the this value and
+            // argument list containing kValue, k, and O.
+            callback.call(T, kValue, k, O);
+          }
+          // d. Increase k by 1.
+          k++;
+        }
+        // 8. return undefined
+      };
+    }
+    
 // Node constructor
     
     function Node(key, val, left, right) {
@@ -203,15 +280,23 @@ var
     }
     
     BST.fromObject = function (obj) {
-          
+        var keys = Object.keys(obj),
+            tree = new BST(null);
+        
+        keys.forEach(function (key, index, array) {
+            var val = obj[key];
+            tree.put(key, val);
+        });
+        
+        return tree;
     };
     
     BST.fromArray = function (arr) {
         var tree = new BST(null);
         
-        for (var i = 0, len = arr.length; i < len; i++) {
-            tree.put(arr[i]);   
-        }
+        arr.forEach(function (el, index, array) {
+            tree.put(el); 
+        });
         
         return tree;
     };
@@ -236,7 +321,7 @@ var
             (function _aux (node) {
                 if (node) {
                     _aux(node.left);
-                    ret.push(pack(node.key, node.val));
+                    ret.push(node.key);
                     _aux(node.right);
                 }
             })(this.root);
@@ -249,7 +334,7 @@ var
             
             (function _aux (node) {
                 if (node) {
-                    ret.push(pack(node.key, node.val));
+                    ret.push(node.key);
                     _aux(node.left);
                     _aux(node.right);
                 }
@@ -265,7 +350,7 @@ var
                 if (node) {
                     _aux(node.left);
                     _aux(node.right);
-                    ret.push(pack(node.key, node.val));
+                    ret.push(node.key);
                 }
             })(this.root);
             
@@ -276,12 +361,10 @@ var
             return sum(this.root);
         },
         
-        // search
         get: function (key) {
             return get(this.root, key);
         },
         
-        // insert
         put: function () {
             // Unpacking arguments
             var args = arguments, alen = args.length, k, v;
@@ -340,18 +423,17 @@ var
             else return x.key;
         },
         
-        // For delete the minimum, we go left until finding a node that has a null left link and then replace the link to that node by its right link
         deleteMin: function () {
             if (this.isEmpty()) throw new BSTException('Empty tree');
             this.root = deleteMin(this.root);
-            // check();
+            if (!this.check()) throw new BSTException('BST not consistent');
             return this;
         },
         
         deleteMax: function () {
             if (this.isEmpty()) throw new BSTException('Empty tree');
             this.root = deleteMax(this.root);
-            // check();
+            if (!this.check()) throw new BSTException('BST not consistent');
             return this;
         },
         
@@ -361,12 +443,45 @@ var
             /*this.root = del(key, this.root);
             // check();
             return this;*/
-        }
+        },
         
+        contains: function (key) {
+            return this.get(key) !== null;  
+        },
+        
+        select: function (k) {
+            if (k < 0 || k >= this.size()) return null;
+            var        
+         x = select(this.root, k);
+            return x.key;
+        },
+        
+        isBST: function () {
+            return isBST(this.root, null, null);
+        },
+        
+        rankConsistent: function () {
+            for (var i = 0, size = this.size(); i < size; i++)
+                if (i !== this.rank(this.select(i))) return false;
+            
+            var keys = this.inOrder(),
+                that = this;
+            
+            keys.forEach(function (key, index, array) {
+                if (key !== that.select(that.rank(key))) return false;
+            });
+            
+            return true;
+        },
+        
+        check: function () {
+            return this.isBST() && this.rankConsistent();
+        }
     };
     
 // Expose the module
     window.j = {
+        'VERSION': '0.0.2',
         'Node': Node,
         'BST': BST
     };

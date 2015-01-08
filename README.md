@@ -67,6 +67,7 @@ var tree = new j.BST(
 );
 ```
 This example will create a node 'A' with one children in the right subtree which in turn has no children.
+
 A tree can be created in a faster and more readable way from an array of single-key objects:
 ```javascript
 var tree = j.BST.fromArray([
@@ -78,6 +79,17 @@ var tree = j.BST.fromArray([
 ]);
 ```
 In this case the node 'G' is the root of `tree`.
+
+In addition a tree can be initialised with an object:
+```javascript
+var tree = j.BST.fromObject({
+    'G': 3,
+    'A': 53,
+    'B': 12,
+    'R': 94,
+    'Z': 23
+});
+```
 
 | Property      | Description
 | ------------- |-------------
