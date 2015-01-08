@@ -27,11 +27,7 @@ var
         if (x === null) return 0;
         return x.val + sum(x.left) + sum(x.right);
     },
-    /*private Node max(Node x) { 
-        if (x.right == null) return x; 
-        else                 return max(x.right); 
-    } */
-        
+    
     min = function (x) {
         if (x.left === null) return x;
         return min(x.left);
@@ -93,6 +89,39 @@ var
         if (x.right === null) return x.left;
         x.right = deleteMax(x.right);
         return x;
+    },
+    
+    firstInOrder = function (x) {
+        if (x === null) throw new BSTException('Empty tree');
+        
+        var k = x.key,
+            v = x.val,
+            l = x.left,
+            r = x.right,
+            a = {};
+        a[k] = v;
+        
+        if (l === null) return a;
+        else firstInOrder(l);
+    },
+    
+    del = function (k, x) {
+        if (x === null) return null;
+        
+        // Unpack node
+        var k1 = x.key, v = x.val, l = x.left, r = x.right;
+        
+        if (k < k1)          return del(k, Node(k1, v, del(k, l), r));
+        else if (k > k1)     return del(k, Node(k1, v, l, del(k, r)));
+        else if (l === null) return r;
+        else if (r === null) return l;
+        else {
+            var obj = firstInOrder(r),
+                k2 = Object.keys(obj)[0],
+                v2 = obj[k2];
+            
+            return Node(k2, v2, l, del(k2, r));
+        }
     };
 
 // Polyfills
@@ -143,7 +172,7 @@ var
     
     function Node(key, val, left, right) {
         if (!(this instanceof Node)) {
-            return new Node(obj, left, right);
+            return new Node(key, val, left, right);
         }
         
         if (!(left instanceof Node && right instanceof Node) && (left !== null && right !== null)) {
@@ -326,19 +355,12 @@ var
             return this;
         },
         
-        /*let rec delete k = function
-          | Empty                -> Empty
-          | Node ((k', v), l, r) ->
-             if k < k'      then delete k Node ((k', v), delete k l, r)
-             else if k > k' then delete k Node ((k', v), l, delete k r)
-             else if l = Empty then r
-             else if r = Empty then l
-             else let (k'', v'') = first_inorder r in
-              Node ((k'', v''), l, delete k'' r)
-        ;;*/
-        
+        // Check
         delete: function (key) {
-               
+            if (this.isEmpty()) throw new BSTException('Empty tree');
+            /*this.root = del(key, this.root);
+            // check();
+            return this;*/
         }
         
     };

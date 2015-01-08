@@ -60,13 +60,24 @@ In this case the node `n` has the key 'A' and the value 3. It has no children (n
 ### BST (work in progress...)
 To create a BST object just pass to the BST constructor the root:
 ```javascript
-var tree = new BST(
+var tree = new j.BST(
     j.Node('A', 3, null,
-        jNode('B', 45, null, null)
+        j.Node('B', 45, null, null)
     )
 );
 ```
 This example will create a node 'A' with one children in the right subtree which in turn has no children.
+A tree can be created in a faster and more readable way from an array of single-key objects:
+```javascript
+var tree = j.BST.fromArray([
+    {'G': 3},
+    {'A': 52},
+    {'B': 12},
+    {'R': 94},
+    {'Z': 23},
+]);
+```
+In this case the node 'G' is the root of `tree`.
 
 | Property      | Description
 | ------------- |-------------
@@ -75,4 +86,4 @@ This example will create a node 'A' with one children in the right subtree which
 | Method        | Description | Example
 | ------------- |------------- | ------
 | `constructor` |              | See above
-| `height`      | Gets the height of the root node (i.e. height of the tree) | tree.height() >> 1
+| `height`      | Gets the height of the root node (i.e. height of the tree) | `tree.height() >> 1`
