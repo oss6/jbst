@@ -104,17 +104,14 @@ var tree = j.BST.fromObject({
         <tr>
             <th>Method</th>
             <th>Description</th>
-            <th>Example</th>
         </tr>
         <tr>
             <td><pre>fromArray</pre></td>
             <td>Creates a BST from an array of single-key objects</td>
-            <td>See above (section 'Creating a BST')</td>
         </tr>
         <tr>
             <td><pre>fromObject</pre></td>
             <td>Creates a BST from an object</td>
-            <td>See above (section 'Creating a BST')</td>
         </tr>
     </tbody>
 </table>
@@ -125,12 +122,14 @@ var tree = j.BST.fromObject({
         <tr>
             <th>Method</th>
             <th>Description</th>
-            <th>Example</th>
+        </tr>
+        <tr>
+            <td><pre>check</pre></td>
+            <td>Checks the consistency of the tree</td>
         </tr>
         <tr>
             <td><pre>height</pre></td>
             <td>Gets the height of the root node (i.e. height of the tree)</td>
-            <td><pre>tree.height() >> 1</pre></td>
         </tr>
     </tbody>
 </table>
