@@ -242,6 +242,22 @@
                 else if (k < k1)    return new Node(obj, _aux(node.left), node.right);
                 else                return new Node(obj, node.left, _aux(node.right));
             })(this.root);
+            
+            return this; // For chaining
+        },
+        
+        // If the given key is equal to the key at the root, we return the number of keys t in the left subtree;
+        // if the given key is less than the key at the root, we return the rank of the key in the left subtree;
+        // and if the given key is larger than the key at the root, we return t plus one (to count the key at the root) plus the rank of the key in the right subtree.
+        rank: function (k) {
+            var root = this.root,
+                kr = root.key,
+                lstree = new BST(root.left),    // Left subtree
+                rstree = new BST(root.right);   // Right subtree
+            
+            if (k === kr) return lstree.size();
+            if (k < kr)   return lstree.rank(k);
+            if (k > kr)   return 1 + lstree.size() + rstree.rank(k);
         },
         
         min: function () {
@@ -256,6 +272,15 @@
                 if (!node.right) return pack(node.key, node.val);
                 return _aux(node.right);
             })(this.root);
+        },
+        
+        // For delete the minimum, we go left until finding a node that has a null left link and then replace the link to that node by its right link
+        deleteMin: function () {
+            
+        },
+        
+        deleteMax: function () {
+            
         },
         
         /*let rec delete k = function
