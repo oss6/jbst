@@ -255,9 +255,9 @@ var
      * Represents a BST node.
      * @constructor
      * @param {string} key - The lookup key.
-     * @param {string} val - The associated data.
-     * @param {string} left - The left subtree.
-     * @param {string} right - The right subtree.
+     * @param {mixed} val - The associated data.
+     * @param {Node} left - The left subtree.
+     * @param {Node} right - The right subtree.
      * @memberof j
      */
     function Node(key, val, left, right) {
@@ -295,12 +295,19 @@ var
     /**
      * Represents a BST (Binary Search Tree)
      * @constructor
-     * @param {Node|null} root - The root of the tree 
+     * @param {Node|null} root - The root of the tree
+     * @memberof j
      */
     function BST(root) {
         this.root = root;   
     }
     
+    /**
+     * Creates a tree from an object
+     * @params {Object} obj - The object to parse
+     * @returns {BST} The tree
+     * @memberof j.BST
+     */
     BST.fromObject = function (obj) {
         var keys = Object.keys(obj),
             tree = new BST(null);
