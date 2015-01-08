@@ -45,4 +45,15 @@ var n = new Node({ 'A': 3 }, null, null)
 ```
 In this case the node `n` has the key 'A' and the value 3. It has no children (no left nor right subtrees).
 
+| Property        | Description
+| -------------   |-------------  |
+| key             | Lookup value  |
+| val             | Node's value  |
+| left            | Left subtree  |
+| right           | Right subtree |
+
+| Method        | Description
+| ------------- |-------------
+| height        | Get the height of a node (i.e. the distance from the node to the deepest leaf)
+
 ### BST
