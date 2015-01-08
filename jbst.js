@@ -27,19 +27,72 @@
             var val = !i ? k : v;
             return i++, val;
         }
+    },
+    
+    size = function (x) {
+        if (!x) return 0;                         // Base case
+        return 1 + size(x.left) + size(x.right);  // Recursive case
+    },
+    
+    sum = function (x) {
+        if (!x) return 0;
+        return x.val + sum(x.left) + sum(x.right);
+    },
+    /*private Node max(Node x) { 
+        if (x.right == null) return x; 
+        else                 return max(x.right); 
+    } */
+        
+    min = function (x) {
+        if (!x.left) return x;
+        return min(x.left);
+    },
+    
+    max = function (x) {
+        if (!x.right) return x;
+        return max(x.right);
+    },
+        
+    get = function (x, k) {
+        if (!x) throw new BSTException('Key not found.'); // or return null
+        
+        var k1 = x.key;
+        if (k === k1) return x.val;
+        if (k < k1)   return get(x.left, k);
+        if (k > k1)   return get(x.right, k);
+    },
+        
+    rank = function (k, x) {
+        if (x == null) return 0; 
+        
+        var kr = x.key;
+        if (k == kr) return size(x.left);
+        if (k < kr)  return rank(k, x.left); 
+        if (k > kr)  return 1 + size(x.left) + rank(k, x.right); 
+    },
+    
+    floor = function (x, k) {
+        if (x == null) return null;
+        
+        var k1 = x.key;
+        if (k === k1) return x;
+        if (k <  k1)  return floor(x.left, k);
+        
+        var t = floor(x.right, k); 
+        return (t !== null) ? t : x;
+    },
+        
+    ceil = function (x, k) {
+        if (x === null) return null;
+        
+        var k1 = x.key;
+        if (k === k1) return x;
+        if (k < k1) { 
+            var t = ceil(x.left, k); 
+            return (t !== null) ? t : x;
+        }
+        return ceil(x.right, k); 
     };
-/*var rec = function (obj, cases) {
-    // Unpack of cases
-    var base_case = cases.base_base,
-        rec_case = cases.rec_case;
-
-    return (function _aux (node) {
-        // Base case
-        if (!node) return base_case;
-        // Recursive case
-        return rec_case.call(null, node, _aux);
-    })(obj);
-};*/
 
 // Polyfills
     
@@ -129,7 +182,7 @@
         var tree = new BST(null);
         
         for (var i = 0, len = arr.length; i < len; i++) {
-            tree.insert(arr[i]);   
+            tree.put(arr[i]);   
         }
         
         return tree;
@@ -138,14 +191,15 @@
     BST.prototype = {
         
         size: function () {
-            return (function _aux (node) {
-                if (!node) return 0;                            // Base case
-                return 1 + _aux(node.left) + _aux(node.right);  // Recursive case
-            })(this.root);
+            return size(this.root);
         },
         
         height: function () {
             return this.root.height();
+        },
+        
+        isEmpty: function () {
+            return this.size() === 0;  
         },
         
         inOrder: function () {
@@ -191,29 +245,16 @@
         },
         
         sum: function () {
-            return (function _aux (node) {
-                if (!node) return 0;
-                return node.val + _aux(node.left) + _aux(node.right);
-            })(this.root);
+            return sum(this.root);
         },
         
-        search: function (key) {
-            var root = this.root;
-            
-            // 2 base cases
-            if (!root) throw new BSTException('Key not found. Empty tree');
-            if (root.key === key) return root.val;
-            
-            return (function _aux (node) {
-                if (!node) throw new BSTException('Key not found');
-                    
-                if (key === node.key) return node.val;
-                if (key < node.key) return _aux(node.left);
-                if (key > node.key) return _aux(node.right);
-            })(root);
+        // search
+        get: function (key) {
+            return get(this.root, key);
         },
         
-        insert: function () {
+        // insert
+        put: function () {
             // Unpacking arguments
             var args = arguments, alen = args.length, k, v;
             
@@ -250,37 +291,38 @@
         // if the given key is less than the key at the root, we return the rank of the key in the left subtree;
         // and if the given key is larger than the key at the root, we return t plus one (to count the key at the root) plus the rank of the key in the right subtree.
         rank: function (k) {
-            var root = this.root,
-                kr = root.key,
-                lstree = new BST(root.left),    // Left subtree
-                rstree = new BST(root.right);   // Right subtree
-            
-            if (k === kr) return lstree.size();
-            if (k < kr)   return lstree.rank(k);
-            if (k > kr)   return 1 + lstree.size() + rstree.rank(k);
+            return rank(k, this.root);
         },
         
         min: function () {
-            return (function _aux (node) {
-                if (!node.left) return pack(node.key, node.val);
-                return _aux(node.left);
-            })(this.root);
+            if (this.isEmpty()) return null;
+            return min(this.root).key;
         },
         
         max: function () {
-            return (function _aux (node) {
-                if (!node.right) return pack(node.key, node.val);
-                return _aux(node.right);
-            })(this.root);
+            if (this.isEmpty()) return null;
+            return max(this.root).key;
+        },
+        
+        floor: function (key) {
+            var x = floor(this.root, key);
+            if (x === null) return null;
+            else return x.key;
+        },
+        
+        ceil: function (key) {
+            var x = ceil(this.root, key);
+            if (x === null) return null;
+            else return x.key;
         },
         
         // For delete the minimum, we go left until finding a node that has a null left link and then replace the link to that node by its right link
         deleteMin: function () {
-            
+            if (this.isEmpty()) throw new BSTException('Empty tree');
         },
         
         deleteMax: function () {
-            
+            if (this.isEmpty()) throw new BSTException('Empty tree');
         },
         
         /*let rec delete k = function
