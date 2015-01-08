@@ -99,12 +99,38 @@ var tree = j.BST.fromObject({
 | `root`        | Holds the entire data structure (defined recursively)
 
 #### Static methods
-| Method        | Description | Example
-| ------------- |------------- | ------
-| `fromArray`   | Creates a BST from an array of single-key objects | See above (section 'Creating a BST')
-| `fromObject`  | Creates a BST from an object | See above (section 'Creating a BST')
+<table>
+    <tbody>
+        <tr>
+            <th>Method</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>`fromArray`</td>
+            <td>Creates a BST from an array of single-key objects</td>
+            <td>See above (section 'Creating a BST')</td>
+        </tr>
+        <tr>
+            <td>`fromObject`</td>
+            <td>Creates a BST from an object</td>
+            <td>See above (section 'Creating a BST')</td>
+        </tr>
+    </tbody>
+</table>
 
 #### Methods
-| Method        | Description | Example
-| ------------- |------------- | ------
-| `height`      | Gets the height of the root node (i.e. height of the tree) | `tree.height() >> 1`
+<table>
+    <tbody>
+        <tr>
+            <th>Method</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>`height`</td>
+            <td>Gets the height of the root node (i.e. height of the tree)</td>
+            <td>`tree.height() >> 1`</td>
+        </tr>
+    </tbody>
+</table>

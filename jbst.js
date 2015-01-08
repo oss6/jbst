@@ -303,16 +303,54 @@ var
     
     BST.prototype = {
         
-        size: function () {
-            return size(this.root);
+        ceil: function (key) {
+            var x = ceil(this.root, key);
+            if (x === null) return null;
+            else return x.key;
+        },
+        
+        check: function () {
+            return this.isBST() && this.rankConsistent();
+        },
+        
+        contains: function (key) {
+            return this.get(key) !== null;  
+        },
+        
+        // Check
+        delete: function (key) {
+            if (this.isEmpty()) throw new BSTException('Empty tree');
+            /*this.root = del(key, this.root);
+            // check();
+            return this;*/
+        },
+        
+        deleteMax: function () {
+            if (this.isEmpty()) throw new BSTException('Empty tree');
+            this.root = deleteMax(this.root);
+            if (!this.check()) throw new BSTException('BST not consistent');
+            return this;
+        },
+        
+        deleteMin: function () {
+            if (this.isEmpty()) throw new BSTException('Empty tree');
+            this.root = deleteMin(this.root);
+            if (!this.check()) throw new BSTException('BST not consistent');
+            return this;
+        },
+        
+        floor: function (key) {
+            var x = floor(this.root, key);
+            if (x === null) return null;
+            else return x.key;
+        },
+        
+        get: function (key) {
+            return get(this.root, key);
         },
         
         height: function () {
             return this.root.height();
-        },
-        
-        isEmpty: function () {
-            return this.size() === 0;  
         },
         
         inOrder: function () {
@@ -323,6 +361,42 @@ var
                     _aux(node.left);
                     ret.push(node.key);
                     _aux(node.right);
+                }
+            })(this.root);
+            
+            return ret;
+        },
+        
+        isBST: function () {
+            return isBST(this.root, null, null);
+        },
+        
+        isEmpty: function () {
+            return this.size() === 0;  
+        },
+        
+        max: function () {
+            if (this.isEmpty()) return null;
+            return max(this.root).key;
+        },
+        
+        min: function () {
+            if (this.isEmpty()) return null;
+            return min(this.root).key;
+        },
+        
+        size: function () {
+            return size(this.root);
+        },
+        
+        postOrder: function () {
+            var ret = [];
+            
+            (function _aux (node) {
+                if (node) {
+                    _aux(node.left);
+                    _aux(node.right);
+                    ret.push(node.key);
                 }
             })(this.root);
             
@@ -341,28 +415,6 @@ var
             })(this.root);
             
             return ret;
-        },
-        
-        postOrder: function () {
-            var ret = [];
-            
-            (function _aux (node) {
-                if (node) {
-                    _aux(node.left);
-                    _aux(node.right);
-                    ret.push(node.key);
-                }
-            })(this.root);
-            
-            return ret;
-        },
-        
-        sum: function () {
-            return sum(this.root);
-        },
-        
-        get: function (key) {
-            return get(this.root, key);
         },
         
         put: function () {
@@ -401,65 +453,6 @@ var
             return rank(k, this.root);
         },
         
-        min: function () {
-            if (this.isEmpty()) return null;
-            return min(this.root).key;
-        },
-        
-        max: function () {
-            if (this.isEmpty()) return null;
-            return max(this.root).key;
-        },
-        
-        floor: function (key) {
-            var x = floor(this.root, key);
-            if (x === null) return null;
-            else return x.key;
-        },
-        
-        ceil: function (key) {
-            var x = ceil(this.root, key);
-            if (x === null) return null;
-            else return x.key;
-        },
-        
-        deleteMin: function () {
-            if (this.isEmpty()) throw new BSTException('Empty tree');
-            this.root = deleteMin(this.root);
-            if (!this.check()) throw new BSTException('BST not consistent');
-            return this;
-        },
-        
-        deleteMax: function () {
-            if (this.isEmpty()) throw new BSTException('Empty tree');
-            this.root = deleteMax(this.root);
-            if (!this.check()) throw new BSTException('BST not consistent');
-            return this;
-        },
-        
-        // Check
-        delete: function (key) {
-            if (this.isEmpty()) throw new BSTException('Empty tree');
-            /*this.root = del(key, this.root);
-            // check();
-            return this;*/
-        },
-        
-        contains: function (key) {
-            return this.get(key) !== null;  
-        },
-        
-        select: function (k) {
-            if (k < 0 || k >= this.size()) return null;
-            var        
-         x = select(this.root, k);
-            return x.key;
-        },
-        
-        isBST: function () {
-            return isBST(this.root, null, null);
-        },
-        
         rankConsistent: function () {
             for (var i = 0, size = this.size(); i < size; i++)
                 if (i !== this.rank(this.select(i))) return false;
@@ -468,14 +461,20 @@ var
                 that = this;
             
             keys.forEach(function (key, index, array) {
-                if (key !== that.select(that.rank(key))) return false;
-            });
+                if (key !== this.select(this.rank(key))) return false;
+            }, this);
             
             return true;
         },
         
-        check: function () {
-            return this.isBST() && this.rankConsistent();
+        select: function (k) {
+            if (k < 0 || k >= this.size()) return null;
+            var x = select(this.root, k);
+            return x.key;
+        },
+        
+        sum: function () {
+            return sum(this.root);
         }
     };
     
