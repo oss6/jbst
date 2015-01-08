@@ -66,7 +66,7 @@
         if (x == null) return 0; 
         
         var kr = x.key;
-        if (k == kr) return size(x.left);
+        if (k === kr) return size(x.left);
         if (k < kr)  return rank(k, x.left); 
         if (k > kr)  return 1 + size(x.left) + rank(k, x.right); 
     },
