@@ -16,19 +16,7 @@
         var obj = {};
         return obj[key] = val, obj;
     },
-    
-    unpackg = function (obj) {
-        var k = Object.keys(obj)[0],
-            v = obj[k],
-            i = 0;
         
-        return function () {
-            if (i >= 2) throw new GeneratorException('');
-            var val = !i ? k : v;
-            return i++, val;
-        }
-    },
-    
     size = function (x) {
         if (!x) return 0;                         // Base case
         return 1 + size(x.left) + size(x.right);  // Recursive case
@@ -67,8 +55,8 @@
         
         var kr = x.key;
         if (k === kr) return size(x.left);
-        if (k < kr)  return rank(k, x.left); 
-        if (k > kr)  return 1 + size(x.left) + rank(k, x.right); 
+        if (k < kr)   return rank(k, x.left); 
+        if (k > kr)   return 1 + size(x.left) + rank(k, x.right); 
     },
     
     floor = function (x, k) {
@@ -140,19 +128,17 @@
     
 // Node constructor
     
-    function Node(obj, left, right) {
+    function Node(key, val, left, right) {
         if (!(this instanceof Node)) {
             return new Node(obj, left, right);
         }
         
-        if (!(left instanceof Node && right instanceof Node) && (left !== null && right !== null))
+        if (!(left instanceof Node && right instanceof Node) && (left !== null && right !== null)) {
             throw new BSTException('Error! Not a valid node.');
+        }
         
-        // Unpack object
-        var unpack = unpackg(obj);
-        this.key = unpack();
-        this.val = unpack();
-        
+        this.key = key;
+        this.val = val;
         this.left = left;
         this.right = right;
     }
@@ -174,7 +160,7 @@
         this.root = root;   
     }
     
-    BST.fromJSON = function (jsonStr) {
+    BST.fromObject = function (obj) {
           
     };
     
@@ -208,7 +194,7 @@
             (function _aux (node) {
                 if (node) {
                     _aux(node.left);
-                    ret.push(node.val);
+                    ret.push(pack(node.key, node.val));
                     _aux(node.right);
                 }
             })(this.root);
@@ -221,7 +207,7 @@
             
             (function _aux (node) {
                 if (node) {
-                    ret.push(node.val);
+                    ret.push(pack(node.key, node.val));
                     _aux(node.left);
                     _aux(node.right);
                 }
@@ -237,7 +223,7 @@
                 if (node) {
                     _aux(node.left);
                     _aux(node.right);
-                    ret.push(node.val);
+                    ret.push(pack(node.key, node.val));
                 }
             })(this.root);
             
@@ -270,18 +256,14 @@
             else throw new BSTException('Wrong number of arguments provided');
             
             this.root = (function _aux (node) {
-                if (!node) {
-                    var obj = pack(k, v);
-                    return new Node(obj, null, null);
-                }
+                if (!node) return new Node(k, v, null, null);
                 
                 var k1 = node.key,
-                    v1 = node.val,
-                    obj = pack(k1, v1);
+                    v1 = node.val;
                 
                 if (k === k1)       throw new BSTException('Same key provided');
-                else if (k < k1)    return new Node(obj, _aux(node.left), node.right);
-                else                return new Node(obj, node.left, _aux(node.right));
+                else if (k < k1)    return new Node(k1, v1, _aux(node.left), node.right);
+                else                return new Node(k1, v1, node.left, _aux(node.right));
             })(this.root);
             
             return this; // For chaining
