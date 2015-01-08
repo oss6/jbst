@@ -22,6 +22,16 @@ Data structure implementation
 -----------------------------
 jbst uses a recursive way for creating the tree instead of using the graph theory model, i.e. nodes and edges.
 
+Recursion pattern
+-----------------
+Most methods in jbst are implemented using the recursion pattern. Here is how it looks like in JS:
+```javascript
+return (function _aux (node) {
+    if (!node) return base_value;
+    return recursive_case();
+})(initial_value);
+```
+
 API & usage
 -----------
 jbst comes with two constructors:
