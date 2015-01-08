@@ -104,7 +104,7 @@ var tree = j.BST.fromObject({
 | `fromArray`   | Creates a BST from an array of single-key objects | See above (section 'Creating a BST')
 | `fromObject`  | Creates a BST from an object | See above (section 'Creating a BST')
 
-**Methods**
+#### Methods
 | Method        | Description | Example
 | ------------- |------------- | ------
 | `constructor` |              | See above
