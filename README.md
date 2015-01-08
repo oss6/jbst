@@ -56,4 +56,4 @@ In this case the node `n` has the key 'A' and the value 3. It has no children (n
 | ------------- |-------------
 | `height`      | Get the height of a node (i.e. the distance from the node to the deepest leaf)
 
-### BST
+### BST (work in progress...)
