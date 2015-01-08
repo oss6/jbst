@@ -1,9 +1,9 @@
 jbst - Binary Search Trees in JavaScript
 ========================================
 
-BST (Binary Search Trees) implementation in JS.
+jbst is an implementation of BSTs (Binary Search Trees) in JS.
 
-> The reason binary-search trees are important is that the following operations can be implemented efficiently using a BST:
+> The reason binary-search trees are important is that the following operations can be implemented efficiently:
 
 >
 - insert a key value
@@ -55,7 +55,7 @@ In this case the node `n` has the key 'A' and the value 3. It has no children (n
 | Method        | Description | Example
 | ------------- |------------- | ------
 | `constructor` |              | See above
-| `height`      | Gets the height of a node (i.e. the distance from the node to the deepest leaf) | n.height() >> 0
+| `height`      | Gets the height of a node (i.e. the distance from the node to the deepest leaf) | `n.height() >> 0`
 
 ### BST (work in progress...)
 To create a BST object just pass to the BST constructor the root:
@@ -67,6 +67,7 @@ var tree = new j.BST(
 );
 ```
 This example will create a node 'A' with one children in the right subtree which in turn has no children.
+
 A tree can be created in a faster and more readable way from an array of single-key objects:
 ```javascript
 var tree = j.BST.fromArray([
