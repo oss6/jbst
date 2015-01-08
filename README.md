@@ -1,5 +1,5 @@
-jbst
-====
+jbst - Binary Search Trees in JavaScript
+========================================
 
 BST (Binary Search Trees) implementation in JS.
 
