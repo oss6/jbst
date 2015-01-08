@@ -59,7 +59,7 @@ In this case the node `n` has the key 'A' and the value 3. It has no children (n
 
 ### BST (work in progress...)
 
-**Creating a BST**
+### Creating a BST
 To create a BST object just pass to the BST constructor the root:
 ```javascript
 var tree = new j.BST(
@@ -93,12 +93,12 @@ var tree = j.BST.fromObject({
 });
 ```
 
-**Properties**
+#### Properties
 | Property      | Description
 | ------------- |-------------
 | `root`        | Holds the entire data structure (defined recursively)
 
-**Static methods**
+#### Static methods
 | Method        | Description | Example
 | ------------- |------------- | ------
 | `fromArray`   | Creates a BST from an array of single-key objects | See above (section 'Creating a BST')
