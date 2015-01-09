@@ -37,114 +37,115 @@
  * @namespace j
  */
 ;(function (window, undefined) {
-    
-// Exception constructor
-    
-    function BSTException(message) {
+
+  /*************************************
+   *  Private variables and functions  *
+   *************************************/
+
+var
+    BSTException = function (message) {
         this.message = message;
     }
-    
-// Private variables and functions
-var
+
     pack = function (key, val) {
         var obj = {};
         obj[key] = val;
         return obj;
     },
-        
+
     size = function (x) {
         if (x === null) return 0;                 // Base case
         return 1 + size(x.left) + size(x.right);  // Recursive case
     },
-    
+
     sum = function (x) {
         if (x === null) return 0;
         return x.val + sum(x.left) + sum(x.right);
     },
-    
+
     min = function (x) {
         if (x.left === null) return x;
         return min(x.left);
     },
-    
+
     max = function (x) {
         if (x.right === null) return x;
         return max(x.right);
     },
-        
+
     get = function (x, k) {
         if (x === null) return null; // be careful
-        
+
         var k1 = x.key;
         if (k === k1) return x.val;
         if (k &lt; k1)   return get(x.left, k);
         if (k > k1)   return get(x.right, k);
     },
-        
+
     rank = function (k, x) {
-        if (x === null) return 0; 
-        
+        if (x === null) return 0;
+
         var kr = x.key;
         if (k === kr) return size(x.left);
-        if (k &lt; kr)   return rank(k, x.left); 
-        if (k > kr)   return 1 + size(x.left) + rank(k, x.right); 
+        if (k &lt; kr)   return rank(k, x.left);
+        if (k > kr)   return 1 + size(x.left) + rank(k, x.right);
     },
-    
+
     floor = function (x, k) {
         if (x === null) return null;
-        
+
         var k1 = x.key;
         if (k === k1) return x;
         if (k &lt;  k1)  return floor(x.left, k);
-        
-        var t = floor(x.right, k); 
+
+        var t = floor(x.right, k);
         return (t !== null) ? t : x;
     },
-        
+
     ceil = function (x, k) {
         if (x === null) return null;
-        
+
         var k1 = x.key;
         if (k === k1) return x;
-        if (k &lt; k1) { 
-            var t = ceil(x.left, k); 
+        if (k &lt; k1) {
+            var t = ceil(x.left, k);
             return (t !== null) ? t : x;
         }
-        return ceil(x.right, k); 
+        return ceil(x.right, k);
     },
-    
+
     deleteMin = function (x) {
         if (x.left === null) return x.right;
         x.left = deleteMin(x.left);
         return x;
     },
-    
+
     deleteMax = function (x) {
         if (x.right === null) return x.left;
         x.right = deleteMax(x.right);
         return x;
     },
-    
+
     firstInOrder = function (x) {
         if (x === null) throw new BSTException('Empty tree');
-        
+
         var k = x.key,
             v = x.val,
             l = x.left,
             r = x.right,
             a = {};
         a[k] = v;
-        
+
         if (l === null) return a;
         else firstInOrder(l);
     },
-    
+
     del = function (k, x) {
         if (x === null) return null;
-        
+
         // Unpack node
         var k1 = x.key, v = x.val, l = x.left, r = x.right;
-        
+
         if (k &lt; k1)          return del(k, Node(k1, v, del(k, l), r));
         else if (k > k1)     return del(k, Node(k1, v, l, del(k, r)));
         else if (l === null) return r;
@@ -153,31 +154,33 @@ var
             var obj = firstInOrder(r),
                 k2 = Object.keys(obj)[0],
                 v2 = obj[k2];
-            
+
             return Node(k2, v2, l, del(k2, r));
         }
     },
-    
+
     isBST = function (x, min, max) {
         if (x === null) return true;
-        
+
         var k = x.key, l = x.left, r = x.right;
         if (min !== null &amp;&amp; k &lt;= min) return false;
         if (max !== null &amp;&amp; k >= max) return false;
         return isBST(l, min, k) &amp;&amp; isBST(r, k, max);
     },
-    
+
     select = function (x, k) {
-        if (x === null) return null; 
-        
-        var t = size(x.left); 
-        if      (t > k) return select(x.left,  k); 
-        else if (t &lt; k) return select(x.right, k - t - 1); 
-        else            return x; 
+        if (x === null) return null;
+
+        var t = size(x.left);
+        if      (t > k) return select(x.left,  k);
+        else if (t &lt; k) return select(x.right, k - t - 1);
+        else            return x;
     };
 
-// Polyfills
-    
+    /*************************************
+    *  Private variables and functions  *
+    *************************************/
+
     // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
     if (!Object.keys) {
         Object.keys = (function() {
@@ -194,7 +197,7 @@ var
                   'constructor'
                 ],
                 dontEnumsLength = dontEnums.length;
-            
+
             return function(obj) {
                 if (typeof obj !== 'object' &amp;&amp; (typeof obj !== 'function' || obj === null)) {
                     throw new TypeError('Object.keys called on non-object');
@@ -219,7 +222,7 @@ var
             };
         }());
     }
-    
+
     // Production steps of ECMA-262, Edition 5, 15.4.4.18
     // Reference: http://es5.github.io/#x15.4.4.18
     if (!Array.prototype.forEach) {
@@ -278,7 +281,7 @@ var
         // 8. return undefined
       };
     }
-    
+
     /**
      * Represents a BST node.
      * @constructor
@@ -292,19 +295,19 @@ var
         if (!(this instanceof Node)) {
             return new Node(key, val, left, right);
         }
-        
+
         if (!(left instanceof Node &amp;&amp; right instanceof Node) &amp;&amp; (left !== null &amp;&amp; right !== null)) {
             throw new BSTException('Error! Not a valid node.');
         }
-        
+
         this.key = key;
         this.val = val;
         this.left = left;
         this.right = right;
     }
-    
+
     Node.prototype = {
-        
+
         /**
          * NumberNumberReturns the height of node (i.e. distance from itself to the deepest leaf in the BST)
          * @returns {Number} The height of the node
@@ -317,9 +320,9 @@ var
                 return 1 + Math.max(_aux(node.left), _aux(node.right));
             })(this);
         },
-        
+
     };
-    
+
     /**
      * Represents a BST (Binary Search Tree)
      * @constructor
@@ -327,9 +330,9 @@ var
      * @memberof j
      */
     function BST(root) {
-        this.root = root;   
+        this.root = root;
     }
-    
+
     /**
      * Creates a tree from an object
      * @params {Object} obj - The object to parse
@@ -339,15 +342,15 @@ var
     BST.fromObject = function (obj) {
         var keys = Object.keys(obj),
             tree = new BST(null);
-        
+
         keys.forEach(function (key, index, array) {
             var val = obj[key];
             tree.put(key, val);
         });
-        
+
         return tree;
     };
-    
+
     /**
      * Creates a tree from a single-key array
      * @params {Array} arr - The array to parse
@@ -356,22 +359,29 @@ var
      */
     BST.fromArray = function (arr) {
         var tree = new BST(null);
-        
+
         arr.forEach(function (el, index, array) {
-            tree.put(el); 
+            tree.put(el);
         });
-        
+
         return tree;
     };
-    
+
     BST.prototype = {
-        
+
+        /**
+         * Gets the smallest key in the BST larger than or equal to 'key'
+         * @params {string} key - The key to match against
+         * @returns {string|null} The
+         * @memberof j.BST
+         * @instance
+         */
         ceil: function (key) {
             var x = ceil(this.root, key);
             if (x === null) return null;
             else return x.key;
         },
-        
+
         /**
          * Checks the consistency of the tree
          * @returns {boolean} Whether the BST is consistent
@@ -381,7 +391,7 @@ var
         check: function () {
             return this.isBST() &amp;&amp; this.rankConsistent();
         },
-        
+
         /**
          * Checks whether the given key is in the tree
          * @params {string} key - The lookup key
@@ -390,9 +400,9 @@ var
          * @instance
          */
         contains: function (key) {
-            return this.get(key) !== null;  
+            return this.get(key) !== null;
         },
-        
+
         /**
          * Deletes a node given the key
          * @params {string} key - The lookup key
@@ -406,7 +416,7 @@ var
             // check();
             return this;*/
         },
-        
+
         /**
          * Deletes the far right node
          * @returns {this} The current object (for chaining capabilities)
@@ -419,7 +429,7 @@ var
             if (!this.check()) throw new BSTException('BST not consistent');
             return this;
         },
-        
+
         /**
          * Deletes the far left node
          * @returns {this} The current object (for chaining capabilities)
@@ -432,13 +442,20 @@ var
             if (!this.check()) throw new BSTException('BST not consistent');
             return this;
         },
-        
+
+        /**
+         * Gets the largest key in the BST less than or equal to 'key'
+         * @params {string} key - The key to match against
+         * @returns {string|null} The
+         * @memberof j.BST
+         * @instance
+         */
         floor: function (key) {
             var x = floor(this.root, key);
             if (x === null) return null;
             else return x.key;
         },
-        
+
         /**
          * Gets the node's value given the key
          * @params {string} The lookup key
@@ -449,7 +466,7 @@ var
         get: function (key) {
             return get(this.root, key);
         },
-        
+
         /**
          * Gets the height of the tree (i.e. the height of the root node)
          * @returns {number} The height of the tree
@@ -459,7 +476,7 @@ var
         height: function () {
             return this.root.height();
         },
-        
+
         /**
          * Gets an array (linear) representation of the BST visiting the
          * left subtree first, then the current node and then the right subtree
@@ -469,7 +486,7 @@ var
          */
         inOrder: function () {
             var ret = [];
-            
+
             (function _aux (node) {
                 if (node) {
                     _aux(node.left);
@@ -477,10 +494,10 @@ var
                     _aux(node.right);
                 }
             })(this.root);
-            
+
             return ret;
         },
-        
+
         /**
          * Checks whether the data structure satisfy symmetric order
          * @returns {boolean} True if the rule is satisfied, false otherwise
@@ -490,7 +507,7 @@ var
         isBST: function () {
             return isBST(this.root, null, null);
         },
-        
+
         /**
          * Checks whether the tree is empty
          * @returns {boolean} True if the BST is empty, false otherwise
@@ -498,9 +515,9 @@ var
          * @instance
          */
         isEmpty: function () {
-            return this.size() === 0;  
+            return this.size() === 0;
         },
-        
+
         /**
          * Gets the key of the far right most node
          * @returns {string} The key
@@ -511,7 +528,7 @@ var
             if (this.isEmpty()) return null;
             return max(this.root).key;
         },
-        
+
         /**
          * Gets the key of the far left most node
          * @returns {string} The key
@@ -522,7 +539,7 @@ var
             if (this.isEmpty()) return null;
             return min(this.root).key;
         },
-        
+
         /**
          * Gets the number of nodes in the tree
          * @returns {number} The number of nodes
@@ -532,17 +549,17 @@ var
         size: function () {
             return size(this.root);
         },
-        
+
         /**
          * Gets an array (linear) representation of the BST visiting the
-         * left subtree first, then the right subtree and then the current node 
+         * left subtree first, then the right subtree and then the current node
          * @returns {Array} The array representation
          * @memberof j.BST
          * @instance
          */
         postOrder: function () {
             var ret = [];
-            
+
             (function _aux (node) {
                 if (node) {
                     _aux(node.left);
@@ -550,10 +567,10 @@ var
                     ret.push(node.key);
                 }
             })(this.root);
-            
+
             return ret;
         },
-        
+
         /**
          * Gets an array (linear) representation of the BST visiting the
          * current node first, then the left and the right subtrees
@@ -563,7 +580,7 @@ var
          */
         preOrder: function () {
             var ret = [];
-            
+
             (function _aux (node) {
                 if (node) {
                     ret.push(node.key);
@@ -571,10 +588,10 @@ var
                     _aux(node.right);
                 }
             })(this.root);
-            
+
             return ret;
         },
-        
+
         /**
          * Inserts an node in the tree (maintaining the structure order)
          * @returns {this} The current object (for chaining capabilities)
@@ -584,7 +601,7 @@ var
         put: function () {
             // Unpacking arguments
             var args = arguments, alen = args.length, k, v;
-            
+
             if (alen === 1) {
                 var obj = args[0];
                 k = Object.keys(obj)[0];
@@ -595,21 +612,21 @@ var
                 v = args[1];
             }
             else throw new BSTException('Wrong number of arguments provided');
-            
+
             this.root = (function _aux (node) {
                 if (!node) return new Node(k, v, null, null);
-                
+
                 var k1 = node.key,
                     v1 = node.val;
-                
+
                 if (k === k1)       throw new BSTException('Same key provided');
                 else if (k &lt; k1)    return new Node(k1, v1, _aux(node.left), node.right);
                 else                return new Node(k1, v1, node.left, _aux(node.right));
             })(this.root);
-            
+
             return this; // For chaining
         },
-        
+
         /**
          * Gets the rank of the given key
          * @params {string} key - The key
@@ -620,7 +637,7 @@ var
         rank: function (k) {
             return rank(k, this.root);
         },
-        
+
         /**
          * Checks if the tree is rank consistent
          * @returns {boolean} True if rank consistency is satisfied, false otherwise
@@ -630,23 +647,26 @@ var
         rankConsistent: function () {
             for (var i = 0, size = this.size(); i &lt; size; i++)
                 if (i !== this.rank(this.select(i))) return false;
-            
+
             var keys = this.inOrder(),
                 that = this;
-            
+
             keys.forEach(function (key, index, array) {
                 if (key !== this.select(this.rank(key))) return false;
             }, this);
-            
+
             return true;
         },
-        
+
+        /**
+         *
+         */
         select: function (k) {
             if (k &lt; 0 || k >= this.size()) return null;
             var x = select(this.root, k);
             return x.key;
         },
-        
+
         /**
          * Returns the sum of the nodes value
          * @returns {number} Sum of nodes value
@@ -657,14 +677,15 @@ var
             return sum(this.root);
         }
     };
-    
+
 // Expose the module
     window.j = {
         'VERSION': '0.0.2',
         'Node': Node,
         'BST': BST
     };
-})(window);</code></pre>
+})(window);
+</code></pre>
         </article>
     </section>
 
@@ -680,7 +701,7 @@ var
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha13</a> on Thu Jan 08 2015 23:32:03 GMT+0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha13</a> on Fri Jan 09 2015 21:17:55 GMT+0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>
