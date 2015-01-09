@@ -631,7 +631,11 @@ var
         },
 
         /**
-         *
+         * Gets the key of rank 'k'
+         * @params {number} k - The rank of the key
+         * @returns {string} The key of rank 'k'
+         * @memberof j.BST
+         * @instance
          */
         select: function (k) {
             if (k < 0 || k >= this.size()) return null;
