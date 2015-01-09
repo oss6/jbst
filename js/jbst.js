@@ -98,37 +98,24 @@ var
         return x;
     },
 
-    firstInOrder = function (x) {
-        if (x === null) throw new BSTException('Empty tree');
-
-        var k = x.key,
-            v = x.val,
-            l = x.left,
-            r = x.right,
-            a = {};
-        a[k] = v;
-
-        if (l === null) return a;
-        else firstInOrder(l);
-    },
-
-    del = function (k, x) {
+    del = function (x, k) {
         if (x === null) return null;
 
-        // Unpack node
-        var k1 = x.key, v = x.val, l = x.left, r = x.right;
+        var k1 = x.key;
 
-        if (k < k1)          return del(k, Node(k1, v, del(k, l), r));
-        else if (k > k1)     return del(k, Node(k1, v, l, del(k, r)));
-        else if (l === null) return r;
-        else if (r === null) return l;
+        if      (k < k1) x.left  = del(x.left,  k);
+        else if (k > k1) x.right = del(x.right, k);
         else {
-            var obj = firstInOrder(r),
-                k2 = Object.keys(obj)[0],
-                v2 = obj[k2];
+            if (x.right === null) return x.left;
+            if (x.left  === null) return x.right;
 
-            return Node(k2, v2, l, del(k2, r));
+            var t = x;
+            x = min(t.right);
+            x.right = deleteMin(t.right);
+            x.left = t.left;
         }
+
+        return x;
     },
 
     isBST = function (x, min, max) {
@@ -384,9 +371,9 @@ var
          */
         delete: function (key) {
             if (this.isEmpty()) throw new BSTException('Empty tree');
-            /*this.root = del(key, this.root);
-            // check();
-            return this;*/
+            this.root = del(this.root, key);
+            if (!this.check()) throw new BSTException('BST not consistent');
+            return this;
         },
 
         /**
