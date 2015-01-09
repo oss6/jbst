@@ -34,6 +34,9 @@ return (function _aux (node) {
 
 API & usage
 -----------
+In this section I will just list the methods in order to create Node and BST objects.
+Check out the [docs](http://oss6.github.io/jbst/docs/index.html) for the description of all the methods.
+
 jbst comes with two constructors:
 - `Node` which defines a BST node.
 - `BST` which defines a binary search tree (is just a wrapper for the data structure containing the root)
@@ -57,7 +60,7 @@ In this case the node `n` has the key 'A' and the value 3. It has no children (n
 | `constructor` |              | See above
 | `height`      | Gets the height of a node (i.e. the distance from the node to the deepest leaf) | `n.height() >> 0`
 
-### BST (work in progress...)
+### BST
 
 #### Creating a BST
 To create a BST object just pass to the BST constructor the root:
@@ -112,24 +115,6 @@ var tree = j.BST.fromObject({
         <tr>
             <td><pre>fromObject</pre></td>
             <td>Creates a BST from an object</td>
-        </tr>
-    </tbody>
-</table>
-
-#### Methods
-<table>
-    <tbody>
-        <tr>
-            <th>Method</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <td><pre>check</pre></td>
-            <td>Checks the consistency of the tree</td>
-        </tr>
-        <tr>
-            <td><pre>height</pre></td>
-            <td>Gets the height of the root node (i.e. height of the tree)</td>
         </tr>
     </tbody>
 </table>
