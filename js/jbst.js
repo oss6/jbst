@@ -17,7 +17,7 @@
 var
     BSTException = function (message) {
         this.message = message;
-    }
+    },
 
     pack = function (key, val) {
         var obj = {};
@@ -134,6 +134,22 @@ var
         if      (t > k) return select(x.left,  k);
         else if (t < k) return select(x.right, k - t - 1);
         else            return x;
+    },
+
+    makeBalancedAux = function (arr, left, right) {
+        if (left > right)
+            return null;
+
+        var mid = Math.ceil((left + right) / 2);
+        return Node(arr[mid], arr[mid], makeBalancedAux(arr, left, mid - 1), makeBalancedAux(arr, mid + 1, right));
+
+        /*if (left > right)
+            return MakeBT(a[left], EmptyTree, EmptyTree)
+
+        mid = (left + right) / 2
+        return MakeBT(arr[mid],
+            makeBalBSTAux(a, left, mid - 1),
+            makeBalBSTAux(a, mid + 1, right))*/
     };
 
     /*************************************
@@ -278,8 +294,7 @@ var
                 if (!node) return -1;
                 return 1 + Math.max(_aux(node.left), _aux(node.right));
             })(this);
-        },
-
+        }
     };
 
     /**
@@ -324,6 +339,11 @@ var
         });
 
         return tree;
+    };
+
+    BST.makeBalanced = function (arr) {
+        arr.sort();
+        return makeBalancedAux(arr, 0, arr.length - 1);
     };
 
     BST.prototype = {
